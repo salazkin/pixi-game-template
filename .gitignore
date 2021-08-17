@@ -1,0 +1,11 @@
+node_modules/
+dist/res/*
+dist/*.js
+dist/*.js.map
+dist/*.js.LICENSE.txt
+res/atlases/*.json
+res/atlases/*.png
+res/i18n/*.json
+res/sounds/*.*
+res/hash.json
+res/version.json
