@@ -1,11 +1,12 @@
 import Button from "framework/components/Button";
 import Image from "framework/components/Image";
 import SpineAnimation from "framework/components/SpineAnimation";
+import Stage, {Layout} from "framework/components/Stage";
 import Tween, {Ease} from "framework/components/Tween";
 import Locales from "framework/services/Locales";
 import Sounds from "framework/services/Sounds";
 import {autoSizeLabel, degreeToRadians} from "framework/utils/Utils";
-import {Container, Text, TextStyle, utils} from "pixi.js";
+import {Container, Text, TextStyle} from "pixi.js";
 
 export default class AppView extends Container {
     private bg: Image;
@@ -20,8 +21,7 @@ export default class AppView extends Container {
         this.addChild(this.bg);
 
         this.spineAnim = new SpineAnimation("spineboy");
-        this.spineAnim.position.set(300, 600);
-        this.spineAnim.play("idle", true);
+        this.playIdle();
         this.addChild(this.spineAnim);
 
         this.label = new Text("", this.getLabelStyle());
@@ -31,7 +31,6 @@ export default class AppView extends Container {
         this.addChild(this.label);
 
         this.btn = new Button("spin_btn");
-        this.btn.position.set(600, 500);
         this.btn.onClickSignal.add(this.onBtnClick, this);
         this.addChild(this.btn);
 
@@ -42,11 +41,31 @@ export default class AppView extends Container {
             ease: Ease.CircEaseOut,
             duration: 500
         });
+
+        Stage.onResize(this.onResize, this);
+        this.onResize(Stage.layout);
+    }
+
+    private onResize(layout: Layout): void {
+        this.bg.position.set(0, (Stage.viewHeight - this.bg.height) * 0.5);
+        this.spineAnim.position.set(this.bg.x + 500, this.bg.y + 1600);
+        if (layout === Layout.LANDSCAPE) {
+            this.btn.position.set(Stage.viewWidth - 300, Stage.viewHeight * 0.5);
+        } else {
+            this.btn.position.set(Stage.viewWidth * 0.5, Stage.viewHeight - 300);
+        }
     }
 
     private onBtnClick(): void {
         Sounds.play("coin");
+        this.spineAnim.animationCompleteSignal.removeAll();
+        this.spineAnim.animationCompleteSignal.addOnce(this.playIdle, this);
+        this.spineAnim.play("jump");
         this.tween.start();
+    }
+
+    private playIdle(): void {
+        this.spineAnim.play("idle", true);
     }
 
     private getLabelStyle(): TextStyle {
