@@ -20,7 +20,7 @@ const stage = new Stage({
 
 init();
 
-async function init() {
+async function init(): Promise<void> {
     await Resources.init("./res/");
     await Locales.init("en");
     await Resources.loadStatic(AssetsConfig.assets);
