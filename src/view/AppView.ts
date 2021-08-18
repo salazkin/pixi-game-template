@@ -2,7 +2,7 @@ import Button from "framework/components/Button";
 import Image from "framework/components/Image";
 import SpineAnimation from "framework/components/SpineAnimation";
 import Stage, {Layout} from "framework/components/Stage";
-import Tween, {Ease} from "framework/components/Tween";
+import Tween, {Ease} from "framework/utils/Tween";
 import Locales from "framework/services/Locales";
 import Sounds from "framework/services/Sounds";
 import {autoSizeLabel, degreeToRadians} from "framework/utils/Utils";
